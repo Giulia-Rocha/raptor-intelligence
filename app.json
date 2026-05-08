@@ -1,0 +1,31 @@
+{
+  "expo": {
+    "name": "Raptor Intelligence",
+    "slug": "raptor-mobile",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "dark",
+    "splash": {
+      "resizeMode": "contain",
+      "backgroundColor": "#0A0F1E"
+    },
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.ford.raptorintelligence"
+    },
+    "android": {
+      "adaptiveIcon": {
+        
+        "backgroundColor": "#0A0F1E"
+      },
+      "package": "com.ford.raptorintelligence"
+    },
+    "plugins": [
+      "expo-router"
+    ],
+    "experiments": {
+      "typedRoutes": true
+    }
+  }
+}

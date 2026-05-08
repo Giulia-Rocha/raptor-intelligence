@@ -1,0 +1,15 @@
+node_modules/
+.expo/
+dist/
+npm-debug.*
+yarn-debug.*
+yarn-error.*
+.env*
+.DS_Store
+
+# @generated expo-cli
+expo-env.d.ts
+
+# Documentação e Assets do Projeto
+prd.md
+desing-images/
