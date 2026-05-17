@@ -71,11 +71,8 @@ export default function HomeScreen() {
   };
 
   const handleSearch = () => {
-    // In a real app, we'd find the vehicle ID based on selections
-    // For this prototype, we'll use our mock ID if Ford Ranger Raptor is selected
-    const vehicleId = (selectedBrand === 'Ford' && selectedModel === 'Ranger' && selectedVersion === 'Raptor')
-      ? 'ford-ranger-raptor-2024'
-      : 'ford-ranger-raptor-2024'; // Fallback for prototype
+    // Generate vehicle ID based on selections
+    const vehicleId = `${selectedBrand.toLowerCase()}-${selectedModel.toLowerCase()}-${selectedVersion.toLowerCase()}-2024`.replace(/\s+/g, '-');
     
     storageService.saveSearch({ 
       id: vehicleId, 
