@@ -29,6 +29,16 @@ export default function LoginScreen() {
     }
   };
 
+  const handleForgotPassword = () => {
+    if (!email) {
+      setError('Por favor, informe seu e-mail para recuperar a senha.');
+      return;
+    }
+    setError(null);
+    // In a real app, call API here: await specsApi.forgotPassword(email)
+    alert(`Um e-mail de recuperação foi enviado para: ${email}`);
+  };
+
   return (
     <KeyboardAvoidingView 
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
@@ -94,14 +104,7 @@ export default function LoginScreen() {
             <Text style={[typography.displayMd, { color: 'white' }]}>Entrar</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity 
-            style={[styles.secondaryButton, { borderColor: colors.borderSubtle, borderRadius: radius.md }]}
-          >
-            <Ionicons name="logo-microsoft" size={20} color={colors.textPrimary} style={{ marginRight: spacing.sm }} />
-            <Text style={[typography.bodyMd, { color: colors.textPrimary }]}>Entrar com Microsoft</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity style={styles.linkButton}>
+          <TouchableOpacity style={styles.linkButton} onPress={handleForgotPassword}>
             <Text style={[typography.bodySm, { color: colors.accentBlue }]}>Esqueci minha senha</Text>
           </TouchableOpacity>
         </View>
