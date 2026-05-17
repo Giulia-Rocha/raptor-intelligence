@@ -28,6 +28,14 @@ export default function SettingsScreen() {
     router.replace('/login');
   };
 
+  const handleEditPhoto = () => {
+    alert('Funcionalidade de alterar foto (ImagePicker) preparada.');
+  };
+
+  const handleChangePassword = () => {
+    alert('Fluxo de alteração de senha solicitado.');
+  };
+
   const renderToggle = (label: string, key: keyof typeof settings) => (
     <View style={[styles.row, { borderBottomColor: colors.borderSubtle }]}>
       <Text style={[typography.bodyMd, { color: colors.textPrimary }]}>{label}</Text>
@@ -47,6 +55,34 @@ export default function SettingsScreen() {
       </View>
 
       <ScrollView contentContainerStyle={styles.scrollContent}>
+        <View style={styles.section}>
+          <Text style={[typography.labelSm, { color: colors.textSecondary, marginBottom: spacing.md }]}>
+            PERFIL DO VENDEDOR
+          </Text>
+          <View style={[styles.card, { backgroundColor: colors.bgSurface, borderRadius: radius.md, padding: spacing.lg }]}>
+            <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: spacing.lg }}>
+              <TouchableOpacity onPress={handleEditPhoto} style={[styles.avatarLarge, { backgroundColor: colors.accentBlue }]}>
+                <Text style={[typography.displayMd, { color: 'white' }]}>
+                  {user?.name.split(' ').map(n => n[0]).join('')}
+                </Text>
+                <View style={[styles.editBadge, { backgroundColor: colors.bgSurface }]}>
+                  <Ionicons name="camera" size={12} color={colors.accentBlue} />
+                </View>
+              </TouchableOpacity>
+              <View style={{ marginLeft: spacing.md }}>
+                <Text style={[typography.displayMd, { color: colors.textPrimary }]}>{user?.name}</Text>
+                <Text style={[typography.bodySm, { color: colors.textSecondary }]}>{user?.dealership}</Text>
+              </View>
+            </View>
+            <TouchableOpacity 
+              style={[styles.profileButton, { borderColor: colors.borderSubtle, borderWidth: 1, borderRadius: radius.md }]}
+              onPress={handleChangePassword}
+            >
+              <Text style={[typography.bodySm, { color: colors.textPrimary }]}>Alterar Senha</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+
         <View style={styles.section}>
           <Text style={[typography.labelSm, { color: colors.textSecondary, marginBottom: spacing.md }]}>
             ATRIBUTOS MONITORADOS
@@ -135,6 +171,30 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     marginTop: 20,
+  },
+  avatarLarge: {
+    width: 64,
+    height: 64,
+    borderRadius: 32,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  editBadge: {
+    position: 'absolute',
+    bottom: 0,
+    right: 0,
+    width: 20,
+    height: 20,
+    borderRadius: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: 'rgba(0,0,0,0.1)',
+  },
+  profileButton: {
+    height: 40,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   footer: {
     alignItems: 'center',
