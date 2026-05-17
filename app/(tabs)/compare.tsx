@@ -140,8 +140,20 @@ export default function CompareScreen() {
               />
             </View>
 
+            <View style={[styles.conclusionSection, { backgroundColor: colors.bgSurface, borderRadius: radius.md, padding: spacing.lg }]}>
+              <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: spacing.sm }}>
+                <Ionicons name="bulb-outline" size={20} color={colors.accentBlue} style={{ marginRight: spacing.sm }} />
+                <Text style={[typography.labelSm, { color: colors.accentBlue }]}>CONCLUSÃO COMPARATIVA</Text>
+              </View>
+              <Text style={[typography.bodyMd, { color: colors.textPrimary, lineHeight: 22 }]}>
+                {matrix.vehicles[0].brand} {matrix.vehicles[0].model} destaca-se em capacidade Off-road e Tecnologia Embarcada. 
+                Já o {matrix.vehicles[1].brand} {matrix.vehicles[1].model} possui vantagem em Performance bruta (0-100km/h) e Conforto. 
+                Para clientes focados em aventuras extremas e custo-benefício, o modelo Ford Raptor é a escolha superior.
+              </Text>
+            </View>
+
             <TouchableOpacity 
-              style={[styles.profileButton, { backgroundColor: colors.bgSurface, borderColor: colors.accentBlue, borderWidth: 1, borderRadius: radius.md }]}
+              style={[styles.profileButton, { backgroundColor: colors.bgSurface, borderColor: colors.accentBlue, borderWidth: 1, borderRadius: radius.md, marginTop: spacing.xl }]}
               onPress={() => router.push('/screens/profile')}
             >
               <Ionicons name="sparkles" size={20} color={colors.accentBlue} style={{ marginRight: spacing.sm }} />
@@ -207,6 +219,11 @@ const styles = StyleSheet.create({
   },
   matrixSection: {
     marginBottom: 32,
+  },
+  conclusionSection: {
+    marginTop: 8,
+    borderWidth: 1,
+    borderColor: 'rgba(0,0,0,0.05)',
   },
   profileButton: {
     flexDirection: 'row',

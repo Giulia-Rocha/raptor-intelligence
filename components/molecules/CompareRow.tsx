@@ -48,10 +48,17 @@ export const CompareRow: React.FC<CompareRowProps> = ({
         {label}
       </Text>
       <View style={{ flexDirection: 'row', paddingBottom: spacing.md }}>
-        <View style={styles.column}>
+        <View style={[
+          styles.column, 
+          winner === 1 && { backgroundColor: `${colors.accentTeal}1A`, borderRadius: 4 }
+        ]}>
           {renderValue(value1, winner === 1)}
         </View>
-        <View style={[styles.column, { borderLeftWidth: 1, borderLeftColor: colors.borderSubtle }]}>
+        <View style={[
+          styles.column, 
+          { borderLeftWidth: 1, borderLeftColor: colors.borderSubtle },
+          winner === 2 && { backgroundColor: `${colors.accentTeal}1A`, borderRadius: 4 }
+        ]}>
           {renderValue(value2, winner === 2)}
         </View>
       </View>
