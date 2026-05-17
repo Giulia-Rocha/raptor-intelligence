@@ -12,6 +12,9 @@ import { Ionicons } from '@expo/vector-icons';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { TechnicalSheet } from '../../../types/specs';
 
+import * as Print from 'expo-print';
+import * as Sharing from 'expo-sharing';
+
 export default function SpecsScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const { colors, typography, spacing, radius } = useTheme();
@@ -41,11 +44,25 @@ export default function SpecsScreen() {
   const handleShare = async () => {
     if (!sheet) return;
     try {
-      await Share.share({
-        message: `Ficha Técnica: ${sheet.vehicle.brand} ${sheet.vehicle.model} ${sheet.vehicle.version}\nGerado via Raptor Intelligence`,
-      });
+      const html = `
+        <html>
+          <body style="font-family: sans-serif; padding: 20px;">
+            <h1 style="color: ${colors.accentBlue}">${sheet.vehicle.brand} ${sheet.vehicle.model}</h1>
+            <h2>${sheet.vehicle.version} (${sheet.vehicle.year})</h2>
+            <hr />
+            ${sheet.specs.map(s => `
+              <div style="margin-bottom: 10px;">
+                <b style="text-transform: capitalize;">${s.label}:</b> ${s.value} ${s.unit || ''}
+              </div>
+            `).join('')}
+          </body>
+        </html>
+      `;
+      const { uri } = await Print.printToFileAsync({ html });
+      await Sharing.shareAsync(uri);
     } catch (error) {
       console.error(error);
+      alert('Erro ao gerar PDF');
     }
   };
 
@@ -131,11 +148,16 @@ export default function SpecsScreen() {
       <View style={[styles.bottomBar, { backgroundColor: colors.bgSurface, borderTopColor: colors.borderSubtle }]}>
         <TouchableOpacity 
           style={[styles.compareButton, { borderColor: colors.accentBlue, borderWidth: 1, borderRadius: radius.md }]}
-          onPress={() => handleCompare(sheet.vehicle)}
-          disabled={isInComparison(sheet.vehicle.id)}
+          onPress={() => {
+            if (isInComparison(sheet.vehicle.id)) {
+              router.push('/(tabs)/compare');
+            } else {
+              handleCompare(sheet.vehicle);
+            }
+          }}
         >
           <Text style={[typography.bodyMd, { color: colors.accentBlue }]}>
-            {isInComparison(sheet.vehicle.id) ? 'Já no comparativo' : 'Comparar com outro veículo'}
+            {isInComparison(sheet.vehicle.id) ? 'Ver no comparativo' : 'Comparar com outro veículo'}
           </Text>
         </TouchableOpacity>
       </View>
