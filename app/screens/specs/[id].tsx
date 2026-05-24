@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Share } from 'rea
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useTheme } from '../../../context/ThemeContext';
 import { useSpecs } from '../../../hooks/useSpecs';
-import { useComparison } from '../../../hooks/useComparison';
+import { useVehicle } from '../../../context/VehicleContext';
 import { SpecSection } from '../../../components/organisms/SpecSection';
 import { SpecRow } from '../../../components/molecules/SpecRow';
 import { SkeletonBar } from '../../../components/atoms/SkeletonBar';
@@ -19,11 +19,10 @@ export default function SpecsScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const { colors, typography, spacing, radius } = useTheme();
   const { getSpecs, isLoading } = useSpecs();
-  const { handleCompare, isInComparison } = useComparison();
+  const { addToComparison, isInComparison } = useVehicle();
   const router = useRouter();
 
   const [sheet, setSheet] = useState<TechnicalSheet | null>(null);
-  const [activeTab, setActiveTab] = useState('motor');
 
   useEffect(() => {
     if (id) {
@@ -35,9 +34,6 @@ export default function SpecsScreen() {
     const data = await getSpecs(id as string);
     if (data) {
       setSheet(data);
-      if (data.specs.length > 0) {
-        setActiveTab(data.specs[0].category);
-      }
     }
   };
 
@@ -102,62 +98,41 @@ export default function SpecsScreen() {
           <Text style={[typography.displayMd, { color: 'rgba(255,255,255,0.8)' }]}>
             {sheet.vehicle.version} • {sheet.vehicle.year}
           </Text>
-          <View style={styles.badgeRow}>
-            <Badge text="Off-road" />
-            <Badge text="Premium" />
-          </View>
         </View>
 
-        <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.tabContainer}>
-          {categories.map(cat => (
-            <TouchableOpacity 
-              key={cat}
-              onPress={() => setActiveTab(cat)}
-              style={[
-                styles.tab, 
-                { borderBottomColor: activeTab === cat ? colors.accentBlue : 'transparent' }
-              ]}
-            >
-              <Text style={[
-                typography.bodyMd, 
-                { color: activeTab === cat ? colors.textPrimary : colors.textMuted, textTransform: 'capitalize' }
-              ]}>
-                {cat}
-              </Text>
-            </TouchableOpacity>
-          ))}
-        </ScrollView>
-
         <View style={styles.specContent}>
-          <SpecSection title={activeTab}>
-            {sheet.specs
-              .filter(s => s.category === activeTab)
-              .map((spec, index, arr) => (
-                <SpecRow 
-                  key={spec.id}
-                  label={spec.label}
-                  value={spec.value}
-                  showDivider={index < arr.length - 1}
-                />
-              ))
-            }
-          </SpecSection>
+          {categories.map((cat) => (
+            <SpecSection key={cat} title={cat}>
+              {sheet.specs
+                .filter(s => s.category === cat)
+                .map((spec, index, arr) => (
+                  <SpecRow 
+                    key={spec.id}
+                    label={spec.label}
+                    value={spec.value}
+                    showDivider={index < arr.length - 1}
+                  />
+                ))
+              }
+            </SpecSection>
+          ))}
         </View>
       </ScrollView>
 
       <View style={[styles.bottomBar, { backgroundColor: colors.bgSurface, borderTopColor: colors.borderSubtle }]}>
         <TouchableOpacity 
-          style={[styles.compareButton, { borderColor: colors.accentBlue, borderWidth: 1, borderRadius: radius.md }]}
+          style={[styles.compareButton, { backgroundColor: colors.accentBlue, borderRadius: radius.md }]}
           onPress={() => {
             if (isInComparison(sheet.vehicle.id)) {
               router.push('/(tabs)/compare');
             } else {
-              handleCompare(sheet.vehicle);
+              addToComparison(sheet.vehicle);
+              alert('Veículo adicionado ao comparativo!');
             }
           }}
         >
-          <Text style={[typography.bodyMd, { color: colors.accentBlue }]}>
-            {isInComparison(sheet.vehicle.id) ? 'Ver no comparativo' : 'Comparar com outro veículo'}
+          <Text style={[typography.bodyMd, { color: 'white', fontWeight: '700' }]}>
+            {isInComparison(sheet.vehicle.id) ? 'Ver no comparativo' : 'Adicionar no comparativo'}
           </Text>
         </TouchableOpacity>
       </View>
