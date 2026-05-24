@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, FlatList, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, FlatList, TouchableOpacity, Alert } from 'react-native';
 import { useTheme } from '../../context/ThemeContext';
 import { storageService } from '../../services/storageService';
 import { VehicleCard } from '../../components/molecules/VehicleCard';
@@ -31,6 +31,24 @@ export default function HistoryScreen() {
     loadData();
   };
 
+  const handleClearHistory = async () => {
+    Alert.alert(
+      "Limpar Histórico",
+      "Deseja apagar todo o seu histórico de buscas?",
+      [
+        { text: "Cancelar", style: "cancel" },
+        { 
+          text: "Limpar", 
+          style: "destructive",
+          onPress: async () => {
+            await storageService.clearHistory();
+            setHistory([]);
+          }
+        }
+      ]
+    );
+  };
+
   const filteredHistory = history.filter((item: any) => {
     if (filter === 'fav') return favorites.includes(item.id);
     return true;
@@ -38,8 +56,13 @@ export default function HistoryScreen() {
 
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: colors.bgPrimary }]}>
-      <View style={[styles.header, { borderBottomColor: colors.borderSubtle }]}>
+      <View style={[styles.header, { borderBottomColor: colors.borderSubtle, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }]}>
         <Text style={[typography.displayMd, { color: colors.textPrimary }]}>Histórico</Text>
+        {history.length > 0 && (
+          <TouchableOpacity onPress={handleClearHistory}>
+            <Ionicons name="trash-outline" size={24} color={colors.accentRed} />
+          </TouchableOpacity>
+        )}
       </View>
 
       <View style={styles.filterSection}>
