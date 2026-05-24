@@ -13,6 +13,7 @@ export default function LoginScreen() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleLogin = async () => {
     if (!email || !password) {
@@ -20,12 +21,17 @@ export default function LoginScreen() {
       return;
     }
     
-    // Simulate API login
-    if (email === 'ford@fiap.com' && password === 'raptor2026') {
-      await signIn('mock-jwt-token');
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      await signIn(email, password);
       router.replace('/(tabs)');
-    } else {
-      setError('Credenciais inválidas. Tente novamente.');
+    } catch (err: any) {
+      console.error(err);
+      setError('Falha na autenticação. Verifique seu e-mail e senha.');
+    } finally {
+      setIsLoading(false);
     }
   };
 

@@ -8,6 +8,7 @@ interface VehicleContextType {
   addToComparison: (vehicle: Vehicle) => void;
   removeFromComparison: (vehicleId: string) => void;
   clearComparison: () => void;
+  isInComparison: (vehicleId: string) => boolean;
 }
 
 const VehicleContext = createContext<VehicleContextType | undefined>(undefined);
@@ -19,7 +20,10 @@ export const VehicleProvider: React.FC<{ children: ReactNode }> = ({ children })
   const addToComparison = (vehicle: Vehicle) => {
     setComparisonList(prev => {
       if (prev.find(v => v.id === vehicle.id)) return prev;
-      if (prev.length >= 2) return [prev[1], vehicle]; // Keep max 2, replace oldest
+      if (prev.length >= 2) {
+        alert("O veículo mais antigo foi removido da comparação.");
+        return [prev[1], vehicle]; // Keep max 2, replace oldest
+      }
       return [...prev, vehicle];
     });
   };
@@ -32,6 +36,10 @@ export const VehicleProvider: React.FC<{ children: ReactNode }> = ({ children })
     setComparisonList([]);
   };
 
+  const isInComparison = (vehicleId: string) => {
+    return !!comparisonList.find(v => v.id === vehicleId);
+  };
+
   return (
     <VehicleContext.Provider value={{
       currentSearchParams,
@@ -39,7 +47,8 @@ export const VehicleProvider: React.FC<{ children: ReactNode }> = ({ children })
       comparisonList,
       addToComparison,
       removeFromComparison,
-      clearComparison
+      clearComparison,
+      isInComparison
     }}>
       {children}
     </VehicleContext.Provider>

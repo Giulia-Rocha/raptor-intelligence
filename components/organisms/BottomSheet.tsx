@@ -8,6 +8,7 @@ import {
   Dimensions,
   TouchableOpacity,
   TouchableWithoutFeedback,
+  ScrollView,
 } from 'react-native';
 import { useTheme } from '../../context/ThemeContext';
 import { Ionicons } from '@expo/vector-icons';
@@ -78,9 +79,12 @@ export const BottomSheet: React.FC<BottomSheetProps> = ({
               <Ionicons name="close" size={24} color={colors.textSecondary} />
             </TouchableOpacity>
           </View>
-          <View style={{ padding: spacing.lg }}>
+          <ScrollView 
+            style={{ padding: spacing.lg }}
+            showsVerticalScrollIndicator={false}
+          >
             {children}
-          </View>
+          </ScrollView>
         </Animated.View>
       </View>
     </Modal>

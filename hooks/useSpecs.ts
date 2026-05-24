@@ -14,11 +14,14 @@ export const useSpecs = () => {
   }, []);
 
   const loadBrands = async () => {
+    setIsLoading(true);
     try {
       const data = await specsApi.getBrands();
       setBrands(data);
     } catch (e) {
       setError('Erro ao carregar marcas');
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -53,13 +56,24 @@ export const useSpecs = () => {
     }
   };
 
+  const getVehicles = async () => {
+    try {
+      return await specsApi.getVehicles();
+    } catch (e) {
+      setError('Erro ao carregar veículos');
+      return [];
+    }
+  };
+
   return {
     brands,
     models,
     versions,
+    loadBrands,
     loadModels,
     loadVersions,
     getSpecs,
+    getVehicles,
     isLoading,
     error
   };

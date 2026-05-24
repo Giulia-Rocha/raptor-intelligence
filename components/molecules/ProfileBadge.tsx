@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Text, StyleSheet, ViewStyle } from 'react-native';
 import { useTheme } from '../../context/ThemeContext';
 
-export type ProfileType = 'enthusiast' | 'lifestyle' | 'rational';
+export type ProfileType = 'enthusiast' | 'lifestyle' | 'rational' | 'tech';
 
 interface ProfileBadgeProps {
   type: ProfileType;
@@ -20,6 +20,8 @@ export const ProfileBadge: React.FC<ProfileBadgeProps> = ({ type, style }) => {
         return { color: colors.accentBlue, label: 'Lifestyle' };
       case 'rational':
         return { color: colors.accentTeal, label: 'Racional' };
+      case 'tech':
+        return { color: colors.accentBlue, label: 'Tecnológico' };
       default:
         return { color: colors.accentBlue, label: type };
     }

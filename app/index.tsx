@@ -17,18 +17,16 @@ export default function SplashScreen() {
       duration: 1000,
       useNativeDriver: true,
     }).start();
+  }, []);
 
-    const timer = setTimeout(() => {
-      if (!isLoading) {
-        if (token) {
-          router.replace('/(tabs)');
-        } else {
-          router.replace('/login');
-        }
+  useEffect(() => {
+    if (!isLoading) {
+      if (token) {
+        router.replace('/(tabs)');
+      } else {
+        router.replace('/login');
       }
-    }, 2000);
-
-    return () => clearTimeout(timer);
+    }
   }, [isLoading, token]);
 
   return (

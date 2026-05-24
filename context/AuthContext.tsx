@@ -1,10 +1,16 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import * as SecureStore from 'expo-secure-store';
+import { specsApi } from '../services/specsApi';
+
+interface AuthUser {
+  name: string;
+  dealership: string;
+}
 
 interface AuthContextType {
   token: string | null;
-  user: { name: string; dealership: string } | null;
-  signIn: (token: string) => Promise<void>;
+  user: AuthUser | null;
+  signIn: (email: string, password: string) => Promise<void>;
   signOut: () => Promise<void>;
   isLoading: boolean;
 }
@@ -12,10 +18,11 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 const TOKEN_KEY = 'raptor_auth_token';
+const USER_KEY = 'raptor_auth_user';
 
 export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [token, setToken] = useState<string | null>(null);
-  const [user, setUser] = useState<{ name: string; dealership: string } | null>(null);
+  const [user, setUser] = useState<AuthUser | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -25,26 +32,39 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const loadToken = async () => {
     try {
       const storedToken = await SecureStore.getItemAsync(TOKEN_KEY);
+      const storedUser = await SecureStore.getItemAsync(USER_KEY);
+      
       if (storedToken) {
         setToken(storedToken);
-        // Mock user data for now
-        setUser({ name: 'Giuliano', dealership: 'Ford Ford Center' });
+      }
+      if (storedUser) {
+        setUser(JSON.parse(storedUser));
       }
     } catch (e) {
-      console.error('Failed to load token', e);
+      console.error('Failed to load auth data', e);
     } finally {
       setIsLoading(false);
     }
   };
 
-  const signIn = async (newToken: string) => {
-    await SecureStore.setItemAsync(TOKEN_KEY, newToken);
-    setToken(newToken);
-    setUser({ name: 'Giuliano', dealership: 'Ford Ford Center' });
+  const signIn = async (email: string, password: string) => {
+    const data = await specsApi.login(email, password);
+    
+    const userData: AuthUser = {
+      name: data.name,
+      dealership: data.dealership
+    };
+
+    await SecureStore.setItemAsync(TOKEN_KEY, data.token);
+    await SecureStore.setItemAsync(USER_KEY, JSON.stringify(userData));
+    
+    setToken(data.token);
+    setUser(userData);
   };
 
   const signOut = async () => {
     await SecureStore.deleteItemAsync(TOKEN_KEY);
+    await SecureStore.deleteItemAsync(USER_KEY);
     setToken(null);
     setUser(null);
   };

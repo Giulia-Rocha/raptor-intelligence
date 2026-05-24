@@ -1,4 +1,5 @@
 import { Vehicle } from './vehicle';
+import { RadarAxes } from './radar';
 
 export type SpecCategory =
   | 'motor'
@@ -42,11 +43,5 @@ export interface ComparisonRow {
 
 export interface RadarScore {
   vehicleId: string;
-  axes: {
-    motor: number;
-    offroad: number;
-    tech: number;
-    price: number;
-    comfort: number;
-  };
+  axes: RadarAxes;
 }

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, FlatList } from 'react-native';
 import { useTheme } from '../../context/ThemeContext';
 import { useAuth } from '../../context/AuthContext';
+import { useVehicle } from '../../context/VehicleContext';
 import { useSpecs } from '../../hooks/useSpecs';
 import { SearchForm } from '../../components/organisms/SearchForm';
 import { BottomSheet } from '../../components/organisms/BottomSheet';
@@ -9,28 +10,29 @@ import { VehicleCard } from '../../components/molecules/VehicleCard';
 import { storageService } from '../../services/storageService';
 import { useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
-
-const ATTRIBUTE_CHIPS = [
-  { id: 'motor', label: 'Motor' },
-  { id: 'offroad', label: 'Off-road' },
-  { id: 'performance', label: 'Desempenho' },
-  { id: 'safety', label: 'Segurança' },
-  { id: 'tech', label: 'Tecnologia' },
-  { id: 'price', label: 'Preço' },
-  { id: 'consumption', label: 'Consumo' },
-];
+import { findVehicleByParams } from '../../utils/vehicle';
 
 export default function HomeScreen() {
   const { colors, typography, spacing, radius } = useTheme();
   const { user } = useAuth();
-  const { brands, models, versions, loadModels, loadVersions } = useSpecs();
+  const { setSearchParams } = useVehicle();
+  const { 
+    brands, 
+    models, 
+    versions, 
+    loadBrands,
+    loadModels, 
+    loadVersions, 
+    getVehicles,
+    isLoading: isSpecsLoading,
+    error: specsError 
+  } = useSpecs();
   const router = useRouter();
 
   const [history, setHistory] = useState<any[]>([]);
   const [selectedBrand, setSelectedBrand] = useState('');
   const [selectedModel, setSelectedModel] = useState('');
   const [selectedVersion, setSelectedVersion] = useState('');
-  const [selectedAttributes, setSelectedAttributes] = useState<string[]>([]);
   
   const [sheetVisible, setSheetVisible] = useState(false);
   const [sheetType, setSheetType] = useState<'brand' | 'model' | 'version' | null>(null);
@@ -64,15 +66,22 @@ export default function HomeScreen() {
     setSheetVisible(false);
   };
 
-  const toggleAttribute = (id: string) => {
-    setSelectedAttributes(prev => 
-      prev.includes(id) ? prev.filter(a => a !== id) : [...prev, id]
-    );
-  };
+  const handleSearch = async () => {
+    const params = { 
+      brand: selectedBrand, 
+      model: selectedModel, 
+      version: selectedVersion,
+      attributes: []
+    };
 
-  const handleSearch = () => {
-    // Generate vehicle ID based on selections
-    const vehicleId = `${selectedBrand.toLowerCase()}-${selectedModel.toLowerCase()}-${selectedVersion.toLowerCase()}-2024`.replace(/\s+/g, '-');
+    // SPEC-002: Persist in context
+    setSearchParams(params);
+
+    // SPEC-003: Find vehicle by params to get deterministic ID
+    const vehicles = await getVehicles();
+    const vehicle = findVehicleByParams(vehicles, params);
+
+    const vehicleId = vehicle?.id || `${selectedBrand.toLowerCase()}-${selectedModel.toLowerCase()}-${selectedVersion.toLowerCase()}-2024`.replace(/\s+/g, '-');
     
     storageService.saveSearch({ 
       id: vehicleId, 
@@ -88,36 +97,59 @@ export default function HomeScreen() {
   const renderSheetContent = () => {
     let data: string[] = [];
     let onSelect: (val: string) => void = () => {};
-    let title = '';
 
     if (sheetType === 'brand') {
       data = brands;
       onSelect = handleSelectBrand;
-      title = 'Selecionar Marca';
     } else if (sheetType === 'model') {
       data = models;
       onSelect = handleSelectModel;
-      title = 'Selecionar Modelo';
     } else if (sheetType === 'version') {
       data = versions;
       onSelect = handleSelectVersion;
-      title = 'Selecionar Versão';
+    }
+
+    if (isSpecsLoading) {
+      return (
+        <View style={{ paddingVertical: 20, alignItems: 'center' }}>
+          <Text style={[typography.bodyMd, { color: colors.textSecondary }]}>Carregando...</Text>
+        </View>
+      );
+    }
+
+    if (specsError && data.length === 0) {
+      return (
+        <View style={{ paddingVertical: 20, alignItems: 'center' }}>
+          <Text style={[typography.bodyMd, { color: colors.accentRed }]}>{specsError}</Text>
+          <TouchableOpacity 
+            style={{ marginTop: 10 }} 
+            onPress={() => loadBrands()}
+          >
+            <Text style={[typography.bodySm, { color: colors.accentBlue }]}>Tente novamente</Text>
+          </TouchableOpacity>
+        </View>
+      );
+    }
+
+    if (data.length === 0) {
+      return (
+        <View style={{ paddingVertical: 20, alignItems: 'center' }}>
+          <Text style={[typography.bodyMd, { color: colors.textSecondary }]}>Nenhum item encontrado.</Text>
+        </View>
+      );
     }
 
     return (
       <View>
-        <FlatList
-          data={data}
-          keyExtractor={(item) => item}
-          renderItem={({ item }) => (
-            <TouchableOpacity 
-              style={[styles.sheetItem, { borderBottomColor: colors.borderSubtle }]}
-              onPress={() => onSelect(item)}
-            >
-              <Text style={[typography.bodyMd, { color: colors.textPrimary }]}>{item}</Text>
-            </TouchableOpacity>
-          )}
-        />
+        {data.map((item) => (
+          <TouchableOpacity 
+            key={item}
+            style={[styles.sheetItem, { borderBottomColor: colors.borderSubtle }]}
+            onPress={() => onSelect(item)}
+          >
+            <Text style={[typography.bodyMd, { color: colors.textPrimary }]}>{item}</Text>
+          </TouchableOpacity>
+        ))}
       </View>
     );
   };
@@ -142,14 +174,11 @@ export default function HomeScreen() {
             selectedBrand={selectedBrand || 'Selecionar marca'}
             selectedModel={selectedModel || 'Selecionar modelo'}
             selectedVersion={selectedVersion || 'Selecionar versão'}
-            attributes={ATTRIBUTE_CHIPS}
-            selectedAttributes={selectedAttributes}
             onSelectBrand={() => { setSheetType('brand'); setSheetVisible(true); }}
             onSelectModel={() => { if (selectedBrand) { setSheetType('model'); setSheetVisible(true); } }}
             onSelectVersion={() => { if (selectedModel) { setSheetType('version'); setSheetVisible(true); } }}
-            onToggleAttribute={toggleAttribute}
             onSearch={handleSearch}
-            isSearchDisabled={!selectedBrand || !selectedModel || !selectedVersion || selectedAttributes.length === 0}
+            isSearchDisabled={!selectedBrand || !selectedModel || !selectedVersion}
           />
         </View>
 

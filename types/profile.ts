@@ -1,4 +1,4 @@
-export type CustomerProfileType = 'enthusiast' | 'lifestyle' | 'rational';
+export type CustomerProfileType = 'enthusiast' | 'lifestyle' | 'rational' | 'tech';
 
 export interface SalesArgument {
   id: string;

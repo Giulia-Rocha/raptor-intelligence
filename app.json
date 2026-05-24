@@ -26,6 +26,11 @@
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "web": {
+      "bundler": "metro",
+      "output": "static",
+      "favicon": "./assets/icon.png"
     }
   }
 }

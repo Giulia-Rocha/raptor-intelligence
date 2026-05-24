@@ -1,29 +1,22 @@
 import React from 'react';
-import { View, Text, StyleSheet, Dimensions } from 'react-native';
+import { View, Text, StyleSheet, useWindowDimensions } from 'react-native';
 import Svg, { Polygon, Line, Text as SvgText, G, Circle } from 'react-native-svg';
 import { useTheme } from '../../context/ThemeContext';
-
-interface RadarData {
-  label: string;
-  motor: number;
-  offRoad: number;
-  tecnologia: number;
-  preco: number;
-  conforto: number;
-}
+import { RadarData } from '../../types/radar';
 
 interface RadarChartProps {
   data: RadarData[]; // Up to 2 datasets
 }
 
-const SIZE = Dimensions.get('window').width - 64;
-const CENTER = SIZE / 2;
-const RADIUS = (SIZE / 2) - 40;
-
 const AXES = ['Motor', 'Off-road', 'Tecnologia', 'Preço', 'Conforto'];
 
 export const RadarChart: React.FC<RadarChartProps> = ({ data }) => {
   const { colors, spacing, typography } = useTheme();
+  const { width } = useWindowDimensions();
+
+  const SIZE = width - 64;
+  const CENTER = SIZE / 2;
+  const RADIUS = (SIZE / 2) - 40;
 
   const getPoint = (index: number, value: number, radius: number) => {
     const angle = (Math.PI * 2 * index) / 5 - Math.PI / 2;
