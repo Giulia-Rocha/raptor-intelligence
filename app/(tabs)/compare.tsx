@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 import { useTheme } from '../../context/ThemeContext';
-import { useComparison } from '../../hooks/useComparison';
+import { useVehicle } from '../../context/VehicleContext';
 import { specsApi } from '../../services/specsApi';
 import { CompareMatrix } from '../../components/organisms/CompareMatrix';
 import { RadarChart } from '../../components/organisms/RadarChart';
@@ -13,7 +13,7 @@ import { useRouter } from 'expo-router';
 
 export default function CompareScreen() {
   const { colors, typography, spacing, radius } = useTheme();
-  const { comparisonList, clearComparison } = useComparison();
+  const { comparisonList, clearComparison } = useVehicle();
   const [matrix, setMatrix] = useState<ComparisonMatrix | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
@@ -35,6 +35,21 @@ export default function CompareScreen() {
       console.error(e);
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const handleSaveComparison = async () => {
+    if (comparisonList.length < 2) return;
+    try {
+      await specsApi.saveComparison(
+        parseInt(comparisonList[0].id),
+        parseInt(comparisonList[1].id),
+        `Comparativo entre ${comparisonList[0].model} e ${comparisonList[1].model}`
+      );
+      alert('Comparativo salvo com sucesso!');
+    } catch (e) {
+      console.error(e);
+      alert('Erro ao salvar comparativo.');
     }
   };
 
@@ -64,9 +79,14 @@ export default function CompareScreen() {
     <SafeAreaView style={[styles.container, { backgroundColor: colors.bgPrimary }]}>
       <View style={[styles.header, { borderBottomColor: colors.borderSubtle }]}>
         <Text style={[typography.displayMd, { color: colors.textPrimary }]}>Comparativo</Text>
-        <TouchableOpacity onPress={clearComparison}>
-          <Text style={[typography.bodySm, { color: colors.accentRed }]}>Limpar</Text>
-        </TouchableOpacity>
+        <View style={{ flexDirection: 'row', gap: 16 }}>
+          <TouchableOpacity onPress={handleSaveComparison} disabled={comparisonList.length < 2}>
+            <Ionicons name="save-outline" size={24} color={comparisonList.length < 2 ? colors.textMuted : colors.accentTeal} />
+          </TouchableOpacity>
+          <TouchableOpacity onPress={clearComparison}>
+            <Text style={[typography.bodySm, { color: colors.accentRed }]}>Limpar</Text>
+          </TouchableOpacity>
+        </View>
       </View>
 
       <ScrollView contentContainerStyle={styles.scrollContent}>
@@ -115,10 +135,10 @@ export default function CompareScreen() {
                   return {
                     label: vehicle ? `${vehicle.brand} ${vehicle.model}` : 'Veículo',
                     motor: s.axes.motor,
-                    offRoad: s.axes.offroad,
-                    tecnologia: s.axes.tech,
-                    preco: s.axes.price,
-                    conforto: s.axes.comfort,
+                    offRoad: s.axes.offRoad,
+                    tecnologia: s.axes.tecnologia,
+                    preco: s.axes.preco,
+                    conforto: s.axes.conforto,
                   };
                 })} 
               />
@@ -140,17 +160,19 @@ export default function CompareScreen() {
               />
             </View>
 
-            <View style={[styles.conclusionSection, { backgroundColor: colors.bgSurface, borderRadius: radius.md, padding: spacing.lg }]}>
-              <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: spacing.sm }}>
-                <Ionicons name="bulb-outline" size={20} color={colors.accentBlue} style={{ marginRight: spacing.sm }} />
-                <Text style={[typography.labelSm, { color: colors.accentBlue }]}>CONCLUSÃO COMPARATIVA</Text>
+            {matrix.vehicles.length >= 2 && (
+              <View style={[styles.conclusionSection, { backgroundColor: colors.bgSurface, borderRadius: radius.md, padding: spacing.lg }]}>
+                <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: spacing.sm }}>
+                  <Ionicons name="bulb-outline" size={20} color={colors.accentBlue} style={{ marginRight: spacing.sm }} />
+                  <Text style={[typography.labelSm, { color: colors.accentBlue }]}>CONCLUSÃO COMPARATIVA</Text>
+                </View>
+                <Text style={[typography.bodyMd, { color: colors.textPrimary, lineHeight: 22 }]}>
+                  {matrix.vehicles[0]?.brand} {matrix.vehicles[0]?.model} destaca-se em capacidade Off-road e Tecnologia Embarcada. 
+                  Já o {matrix.vehicles[1]?.brand} {matrix.vehicles[1]?.model} possui vantagem em Performance bruta (0-100km/h) e Conforto. 
+                  Para clientes focados em aventuras extremas e custo-benefício, o modelo Ford Raptor é a escolha superior.
+                </Text>
               </View>
-              <Text style={[typography.bodyMd, { color: colors.textPrimary, lineHeight: 22 }]}>
-                {matrix.vehicles[0].brand} {matrix.vehicles[0].model} destaca-se em capacidade Off-road e Tecnologia Embarcada. 
-                Já o {matrix.vehicles[1].brand} {matrix.vehicles[1].model} possui vantagem em Performance bruta (0-100km/h) e Conforto. 
-                Para clientes focados em aventuras extremas e custo-benefício, o modelo Ford Raptor é a escolha superior.
-              </Text>
-            </View>
+            )}
 
             <TouchableOpacity 
               style={[styles.profileButton, { backgroundColor: colors.bgSurface, borderColor: colors.accentBlue, borderWidth: 1, borderRadius: radius.md, marginTop: spacing.xl }]}
@@ -232,3 +254,4 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   }
 });
+
