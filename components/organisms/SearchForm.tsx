@@ -2,7 +2,6 @@ import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
 import { useTheme } from '../../context/ThemeContext';
 import { SearchDropdown } from '../molecules/SearchDropdown';
-import { FilterChip } from '../atoms/FilterChip';
 
 interface SearchFormProps {
   onSelectBrand: () => void;
@@ -11,9 +10,6 @@ interface SearchFormProps {
   selectedModel?: string;
   onSelectVersion: () => void;
   selectedVersion?: string;
-  attributes: { id: string; label: string }[];
-  selectedAttributes: string[];
-  onToggleAttribute: (id: string) => void;
   onSearch: () => void;
   isSearchDisabled?: boolean;
 }
@@ -25,9 +21,6 @@ export const SearchForm: React.FC<SearchFormProps> = ({
   selectedModel,
   onSelectVersion,
   selectedVersion,
-  attributes,
-  selectedAttributes,
-  onToggleAttribute,
   onSearch,
   isSearchDisabled,
 }) => {
@@ -65,22 +58,6 @@ export const SearchForm: React.FC<SearchFormProps> = ({
         style={{ marginBottom: spacing.lg }}
       />
 
-      <Text style={[typography.labelSm, { color: colors.textMuted, marginBottom: spacing.sm }]}>
-        ATRIBUTOS EM DESTAQUE
-      </Text>
-      
-      <View style={styles.chipContainer}>
-        {attributes.map((attr) => (
-          <FilterChip
-            key={attr.id}
-            label={attr.label}
-            selected={selectedAttributes.includes(attr.id)}
-            onPress={() => onToggleAttribute(attr.id)}
-            style={{ marginRight: spacing.sm, marginBottom: spacing.sm }}
-          />
-        ))}
-      </View>
-
       <TouchableOpacity
         activeOpacity={0.8}
         onPress={onSearch}
@@ -90,14 +67,14 @@ export const SearchForm: React.FC<SearchFormProps> = ({
           {
             backgroundColor: isSearchDisabled ? colors.bgElevated : colors.accentBlue,
             borderRadius: radius.md,
-            marginTop: spacing.lg,
+            marginTop: spacing.xs,
           },
         ]}
       >
         <Text
           style={[
             typography.bodyMd,
-            { color: isSearchDisabled ? colors.textMuted : colors.textPrimary, fontWeight: '700' },
+            { color: isSearchDisabled ? colors.textMuted : 'white', fontWeight: '700' },
           ]}
         >
           Gerar ficha técnica
@@ -110,10 +87,6 @@ export const SearchForm: React.FC<SearchFormProps> = ({
 const styles = StyleSheet.create({
   container: {
     width: '100%',
-  },
-  chipContainer: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
   },
   button: {
     height: 48,
