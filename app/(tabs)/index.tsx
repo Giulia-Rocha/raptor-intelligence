@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, FlatList } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, FlatList, Alert } from 'react-native';
 import { useTheme } from '../../context/ThemeContext';
 import { useAuth } from '../../context/AuthContext';
 import { useVehicle } from '../../context/VehicleContext';
@@ -11,6 +11,7 @@ import { storageService } from '../../services/storageService';
 import { useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { findVehicleByParams } from '../../utils/vehicle';
+import { Ionicons } from '@expo/vector-icons';
 
 export default function HomeScreen() {
   const { colors, typography, spacing, radius } = useTheme();
@@ -44,6 +45,24 @@ export default function HomeScreen() {
   const loadHistory = async () => {
     const data = await storageService.getHistory();
     setHistory(data);
+  };
+
+  const handleClearHistory = async () => {
+    Alert.alert(
+      "Limpar Histórico",
+      "Deseja apagar todas as buscas recentes?",
+      [
+        { text: "Cancelar", style: "cancel" },
+        { 
+          text: "Limpar", 
+          style: "destructive",
+          onPress: async () => {
+            await storageService.clearHistory();
+            setHistory([]);
+          }
+        }
+      ]
+    );
   };
 
   const handleSelectBrand = (brand: string) => {
@@ -184,9 +203,14 @@ export default function HomeScreen() {
 
         {history.length > 0 && (
           <View style={styles.historySection}>
-            <Text style={[typography.labelSm, { color: colors.textSecondary, marginBottom: spacing.md, marginLeft: spacing.lg }]}>
-              Buscas Recentes
-            </Text>
+            <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingRight: spacing.lg }}>
+              <Text style={[typography.labelSm, { color: colors.textSecondary, marginBottom: spacing.md, marginLeft: spacing.lg }]}>
+                Buscas Recentes
+              </Text>
+              <TouchableOpacity onPress={handleClearHistory} style={{ marginBottom: spacing.md }}>
+                <Ionicons name="trash-outline" size={20} color={colors.accentRed} />
+              </TouchableOpacity>
+            </View>
             <FlatList
               horizontal
               showsHorizontalScrollIndicator={false}
