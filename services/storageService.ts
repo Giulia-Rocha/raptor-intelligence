@@ -1,28 +1,53 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { SearchHistoryItem, StorageSchemaV1 } from '../types/storage';
 
 const KEYS = {
-  SEARCH_HISTORY: '@raptor/search_history',
+  SEARCH_HISTORY: '@raptor/search_history_v1',
   FAVORITES: '@raptor/favorites',
   SETTINGS: '@raptor/settings',
 };
 
 export const storageService = {
-  saveSearch: async (vehicle: any) => {
+  saveSearch: async (vehicle: Omit<SearchHistoryItem, 'createdAt'>) => {
     try {
       const history = await storageService.getHistory();
-      const updated = [vehicle, ...history.filter((v: any) => v.id !== vehicle.id)].slice(0, 10);
-      await AsyncStorage.setItem(KEYS.SEARCH_HISTORY, JSON.stringify(updated));
+      const newItem: SearchHistoryItem = {
+        ...vehicle,
+        createdAt: new Date().toISOString()
+      };
+      const updated = [newItem, ...history.filter(v => v.id !== vehicle.id)].slice(0, 10);
+      
+      const schema: StorageSchemaV1 = {
+        version: 1,
+        searches: updated
+      };
+      
+      await AsyncStorage.setItem(KEYS.SEARCH_HISTORY, JSON.stringify(schema));
     } catch (e) {
       console.error('Error saving search history', e);
     }
   },
 
-  getHistory: async () => {
+  getHistory: async (): Promise<SearchHistoryItem[]> => {
     try {
       const data = await AsyncStorage.getItem(KEYS.SEARCH_HISTORY);
-      return data ? JSON.parse(data) : [];
+      if (!data) return [];
+      
+      const parsed = JSON.parse(data) as StorageSchemaV1;
+      if (parsed.version === 1 && Array.isArray(parsed.searches)) {
+        return parsed.searches;
+      }
+      return [];
     } catch (e) {
       return [];
+    }
+  },
+
+  clearHistory: async () => {
+    try {
+      await AsyncStorage.removeItem(KEYS.SEARCH_HISTORY);
+    } catch (e) {
+      console.error('Error clearing search history', e);
     }
   },
 
