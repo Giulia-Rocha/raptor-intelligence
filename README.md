@@ -71,7 +71,6 @@ A mobilidade permite que o vendedor acompanhe o cliente durante todo o trajeto f
 
 | Descrição da Tela | Visualização |
 | :--- | :--- |
-
 | **Login Screen**<br>Acesso seguro e autenticado para o consultor de vendas. | <img src="./assets/login.jpeg" width="250" /> |
 | **Tela Principal**<br>Tela principal da aplicação com busca e histórico. | <img src="./assets/principal.jpeg" width="250" /> |
 | **Busca / Brand Selection**<br>Interface para seleção rápida de marcas e modelos. | <img src="./assets/marca.jpeg" width="250" /> |
