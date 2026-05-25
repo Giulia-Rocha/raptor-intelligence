@@ -23,10 +23,14 @@ export const CompareRow: React.FC<CompareRowProps> = ({
 }) => {
   const { colors, spacing, typography } = useTheme();
 
-  const renderValue = (val: string | number | null | undefined, isWinner: boolean) => {
+  const renderValue = (val: any, isWinner: boolean) => {
     if (val === undefined || val === null || val === '') {
       return <NDPill />;
     }
+
+    // Garantir que arrays sejam formatados apenas com vírgulas e sem colchetes
+    const displayValue = Array.isArray(val) ? val.join(', ') : val;
+
     return (
       <Text
         style={[
@@ -34,10 +38,11 @@ export const CompareRow: React.FC<CompareRowProps> = ({
           {
             color: isWinner ? colors.accentTeal : colors.textPrimary,
             fontWeight: isWinner ? '700' : '400',
+            textAlign: 'center',
           },
         ]}
       >
-        {val}
+        {displayValue}
       </Text>
     );
   };
@@ -49,13 +54,13 @@ export const CompareRow: React.FC<CompareRowProps> = ({
       </Text>
       <View style={{ flexDirection: 'row', paddingBottom: spacing.md }}>
         <View style={[
-          styles.column, 
+          styles.column,
           winner === 1 && { backgroundColor: `${colors.accentTeal}1A`, borderRadius: 4 }
         ]}>
           {renderValue(value1, winner === 1)}
         </View>
         <View style={[
-          styles.column, 
+          styles.column,
           { borderLeftWidth: 1, borderLeftColor: colors.borderSubtle },
           winner === 2 && { backgroundColor: `${colors.accentTeal}1A`, borderRadius: 4 }
         ]}>

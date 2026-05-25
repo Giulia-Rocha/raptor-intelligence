@@ -41,8 +41,8 @@ export const SpecRow: React.FC<SpecRowProps> = ({
 
         <View style={styles.rightContent}>
           {value ? (
-            <Text style={[typography.bodyMd, { color: colors.textPrimary, fontWeight: '600' }]}>
-              {value}
+            <Text style={[typography.bodyMd, { color: colors.textPrimary, fontWeight: '600', textAlign: 'right' }]}>
+              {Array.isArray(value) ? value.join(', ') : value}
             </Text>
           ) : (
             <NDPill />
