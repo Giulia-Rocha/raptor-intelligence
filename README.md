@@ -19,7 +19,6 @@ A mobilidade permite que o vendedor acompanhe o cliente durante todo o trajeto f
 - [x] **Ficha Técnica Detalhada:** Visualização de especificações técnicas organizadas por categorias.
 - [x] **Comparativo Side-by-Side:** Comparação direta entre dois veículos com indicadores de vitória.
 - [x] **Gráfico de Radar:** Visualização gráfica de superioridade em pilares de performance.
-- [x] **Cards de Argumentação:** Dicas táticas para contornar objeções de clientes.
 - [x] **Histórico de Buscas:** Acesso rápido às últimas consultas realizadas com opção de limpeza.
 - [x] **Favoritos:** Possibilidade de marcar veículos para consulta rápida.
 - [x] **Perfil e Configurações:** Gestão de preferências do consultor e dados da concessionária.
@@ -72,18 +71,17 @@ A mobilidade permite que o vendedor acompanhe o cliente durante todo o trajeto f
 
 | Descrição da Tela | Visualização |
 | :--- | :--- |
-| **Splash Screen**<br>Tela de abertura com a identidade visual do projeto. | ![Splash](./desing-images/Splash%20Screen.png) |
-| **Login Screen**<br>Acesso seguro e autenticado para o consultor de vendas. | ![Login](./desing-images/Login%20Screen.png) |
-| **Busca / Brand Selection**<br>Interface para seleção rápida de marcas e modelos para iniciar a consulta. | ![Busca](./desing-images/Busca.png) |
-| **D em Destaque**<br>Vitrine com os principais diferenciais tecnológicos e lançamentos da Ford. | ![Destaque](./desing-images/D%20em%20Destaque.png) |
-| **Ficha Técnica**<br>Informações detalhadas organizadas por categorias e trunfos do veículo. | ![Ficha](./desing-images/Ficha%20Técnica.png) |
-| **Comparativo Side-by-Side**<br>Comparação direta entre dois modelos com destaque para o vencedor em cada quesito. | ![Comparativo](./desing-images/Comparativo%20Side-by-Side.png) |
-| **Gráfico de Radar**<br>Visualização analítica dos pilares de performance (Motor, Conforto, Tecnologia, etc). | ![Radar](./desing-images/Compartilhar.png) |
-| **Histórico de Buscas**<br>Registro das últimas consultas para agilizar o atendimento recorrente. | ![Histórico](./desing-images/Histórico%20de%20Buscas.png) |
-| **Configurações**<br>Ajustes de preferências do aplicativo e informações do consultor. | ![Configurações](./desing-images/Configurações.png) |
-| **Perfil do Cliente**<br>Gestão de informações do consultor e dados da concessionária. | ![Perfil](./desing-images/Perfil%20do%20Cliente.png) |
-| **Loading State**<br>Experiência de carregamento fluida utilizando Skeletons para melhor UX. | ![Loading](./desing-images/Loading%20State.png) |
-| **Seleção de Marca**<br>Fluxo intuitivo para navegação no catálogo de marcas parceiras e concorrentes. | ![Brand](./desing-images/Brand%20Selection.png) |
+
+| **Login Screen**<br>Acesso seguro e autenticado para o consultor de vendas. | ![Login](./assets/login.jpeg) |
+| **Tela Principal**<br>tela principal da aplicação | ![Main](./assets/principal.jpeg) |
+| **Busca / Brand Selection**<br>Interface para seleção rápida de marcas e modelos para iniciar a consulta. | ![Busca](./assets/marca.jpeg) |
+| **Ficha Técnica**<br>Informações detalhadas organizadas por categorias e trunfos do veículo. | ![Ficha](./assets/ficha.jpeg) |
+| **Comparativo Side-by-Side**<br>Comparação direta entre dois modelos com destaque para o vencedor em cada quesito. | ![Comparativo](./assets/comparacao.jpeg) |
+| **Gráfico de Radar**<br>Visualização analítica dos pilares de performance (Motor, Conforto, Tecnologia, etc). | ![Radar](./assets/grafico.jpeg) |
+| **Histórico de Buscas**<br>Registro das últimas consultas para agilizar o atendimento recorrente. | ![Histórico](./assets/historico.jpeg) |
+| **Configurações**<br>Ajustes de preferências do aplicativo e informações do consultor. | ![Configurações](./assets/config.jpeg) |
+| **Buscas Favoritas**<br>Buscas Favoritadas para maior agilidade | ![Favoritos](./assets/fav.jpeg) |
+
 
 ---
 
