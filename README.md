@@ -72,15 +72,15 @@ A mobilidade permite que o vendedor acompanhe o cliente durante todo o trajeto f
 | Descrição da Tela | Visualização |
 | :--- | :--- |
 
-| **Login Screen**<br>Acesso seguro e autenticado para o consultor de vendas. | ![Login](./assets/login.jpeg) |
-| **Tela Principal**<br>tela principal da aplicação | ![Main](./assets/principal.jpeg) |
-| **Busca / Brand Selection**<br>Interface para seleção rápida de marcas e modelos para iniciar a consulta. | ![Busca](./assets/marca.jpeg) |
-| **Ficha Técnica**<br>Informações detalhadas organizadas por categorias e trunfos do veículo. | ![Ficha](./assets/ficha.jpeg) |
-| **Comparativo Side-by-Side**<br>Comparação direta entre dois modelos com destaque para o vencedor em cada quesito. | ![Comparativo](./assets/comparacao.jpeg) |
-| **Gráfico de Radar**<br>Visualização analítica dos pilares de performance (Motor, Conforto, Tecnologia, etc). | ![Radar](./assets/grafico.jpeg) |
-| **Histórico de Buscas**<br>Registro das últimas consultas para agilizar o atendimento recorrente. | ![Histórico](./assets/historico.jpeg) |
-| **Configurações**<br>Ajustes de preferências do aplicativo e informações do consultor. | ![Configurações](./assets/config.jpeg) |
-| **Buscas Favoritas**<br>Buscas Favoritadas para maior agilidade | ![Favoritos](./assets/fav.jpeg) |
+| **Login Screen**<br>Acesso seguro e autenticado para o consultor de vendas. | <img src="./assets/login.jpeg" width="250" /> |
+| **Tela Principal**<br>Tela principal da aplicação com busca e histórico. | <img src="./assets/principal.jpeg" width="250" /> |
+| **Busca / Brand Selection**<br>Interface para seleção rápida de marcas e modelos. | <img src="./assets/marca.jpeg" width="250" /> |
+| **Ficha Técnica**<br>Informações detalhadas organizadas por categorias. | <img src="./assets/ficha.jpeg" width="250" /> |
+| **Comparativo Side-by-Side**<br>Comparação direta com destaque para o vencedor. | <img src="./assets/comparacao.jpeg" width="250" /> |
+| **Gráfico de Radar**<br>Visualização analítica dos pilares de performance. | <img src="./assets/grafico.jpeg" width="250" /> |
+| **Histórico de Buscas**<br>Registro das últimas consultas realizadas. | <img src="./assets/historico.jpeg" width="250" /> |
+| **Configurações**<br>Ajustes de preferências do aplicativo. | <img src="./assets/config.jpeg" width="250" /> |
+| **Buscas Favoritas**<br>Buscas favoritadas para maior agilidade. | <img src="./assets/fav.jpeg" width="250" /> |
 
 
 ---
