@@ -40,30 +40,45 @@ A mobilidade permite que o vendedor acompanhe o cliente durante todo o trajeto f
 ## 🚀 c) Como Rodar o Projeto
 
 ### Pré-requisitos
-- **Node.js** (versão 18 ou superior)
-- **npm** ou **yarn**
+- **Node.js** (versão 18 ou superior) & **npm/yarn**
 - **Expo Go** instalado no seu dispositivo móvel (Android ou iOS)
+- **Docker** instalado e em execução
 
 ### Passo a Passo
 
-1. **Clone o repositório:**
+#### 1. Subir o Backend Completo (Docker)
+O banco de dados e a API Java estão configurados para rodar juntos em containers.
+
+1. Na raiz do projeto (`challenge-ford`), execute:
    ```bash
-   git clone <link-do-repositorio>
+   docker-compose up -d
+   ```
+   *Isso iniciará o PostgreSQL e a Raptor API automaticamente. A API ficará disponível em `http://localhost:8080`.*
+
+#### 2. Configurar e Rodar o Mobile
+1. Acesse a pasta do mobile:
+   ```bash
    cd raptor-mobile
    ```
-
-2. **Instale as dependências:**
+2. Instale as dependências:
    ```bash
    npm install
    ```
+3. **Conexão com a API (Opcional):**
+   O app inicia por padrão com Mocks (offline). Para usar a API real que você acabou de subir no Docker, crie um arquivo `.env` na raiz da pasta `raptor-mobile`:
+   ```env
+   EXPO_PUBLIC_USE_MOCKS=false
+   EXPO_PUBLIC_API_URL=http://<SEU_IP_LOCAL>:8080
+   ```
+   *(Dica: Use o seu IP local, ex: 192.168.x.x, para que o celular físico consiga encontrar o servidor).*
 
-3. **Inicie o projeto:**
+4. Inicie o projeto:
    ```bash
-   npx expo start
+   npx expo start -c
    ```
 
-4. **Execute no dispositivo:**
-   Abra o app **Expo Go** no seu celular e escaneie o QR Code que aparecerá no terminal.
+#### 3. Executar no Dispositivo
+Abra o app **Expo Go** no seu celular e escaneie o QR Code que aparecerá no terminal.
 
 ---
 
